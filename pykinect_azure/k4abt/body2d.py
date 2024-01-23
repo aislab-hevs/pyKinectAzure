@@ -8,6 +8,7 @@ from pykinect_azure.k4a._k4atypes import K4A_CALIBRATION_TYPE_DEPTH
 
 class Body2d:
 	def __init__(self, body2d_handle):
+		self.joints = None
 
 		if body2d_handle:
 			self._handle = body2d_handle
@@ -15,7 +16,6 @@ class Body2d:
 			self.initialize_skeleton()
 
 	def __del__(self):
-
 		self.destroy()
 
 	def json(self):
@@ -42,26 +42,43 @@ class Body2d:
 
 		self.joints = joints
 
-	def draw(self, image, only_segments = False):
-
-		color = (int (body_colors[self.id][0]), int (body_colors[self.id][1]), int (body_colors[self.id][2]))
-
-		for segmentId in range(len(K4ABT_SEGMENT_PAIRS)):
-			segment_pair = K4ABT_SEGMENT_PAIRS[segmentId]
+	def draw(self, image, only_segments = False, show_id = False):
+		for segment_id in range(len(K4ABT_SEGMENT_PAIRS)):
+			segment_pair = K4ABT_SEGMENT_PAIRS[segment_id]
 			point1 = self.joints[segment_pair[0]].get_coordinates()
 			point2 = self.joints[segment_pair[1]].get_coordinates()
 
 			if (point1[0] == 0 and point1[1] == 0) or (point2[0] == 0 and point2[1] == 0):
 				continue
-			image = cv2.line(image, point1, point2,color, 2)
+
+			image = cv2.line(image, point1, point2, self.color, 2)
+
+		if show_id:
+			image = cv2.putText(img=image,
+								text=str(self.id),
+								org=(50, 50),
+								fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+								fontScale=1,
+								color=(255, 255, 255), # white
+								thickness=1,
+								lineType=cv2.LINE_AA)
 
 		if only_segments:
 			return image
 
 		for joint in self.joints:
-			image = cv2.circle(image, joint.get_coordinates(), 3, color, 3)
+			image = cv2.circle(image, joint.get_coordinates(), 3, self.color, 3)
 
 		return image
+
+	@property
+	def color(self, unique_colors=200):
+		total_colors = 256 ** 3
+		hex_color = self.id * int(total_colors / unique_colors)
+		r = (hex_color >> 16) & 0xFF
+		g = (hex_color >> 8) & 0xFF
+		b = hex_color & 0xFF
+		return [r, g, b]
 
 
 	@staticmethod
