@@ -11,7 +11,6 @@ class Body:
 			self.initialize()
 
 	def json(self):
-
 		return self._handle.__iter__()
 
 	def numpy(self):
