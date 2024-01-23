@@ -30,7 +30,7 @@ class Joint2d:
 			self._handle = None
 
 	def get_coordinates(self):
-		return (int(self.position.x), int(self.position.y))
+		return int(self.position.x), int(self.position.y)
 
 	def get_name(self):
 		return K4ABT_JOINT_NAMES[self.id]
