@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 
 from pykinect_azure.k4abt.joint2d import Joint2d
-from pykinect_azure.k4abt._k4abtTypes import K4ABT_JOINT_COUNT, K4ABT_SEGMENT_PAIRS
+from pykinect_azure.k4abt._k4abtTypes import K4ABT_JOINT_COUNT, K4ABT_SEGMENT_PAIRS, K4ABT_JOINT_HEAD
 from pykinect_azure.k4abt._k4abtTypes import k4abt_skeleton2D_t, k4abt_body2D_t, body_colors
 from pykinect_azure.k4a._k4atypes import K4A_CALIBRATION_TYPE_DEPTH
 
@@ -56,11 +56,12 @@ class Body2d:
 		if show_id:
 			image = cv2.putText(img=image,
 								text=str(self.id),
-								org=(self.joints[27].position.x, self.joints[27].position.y),
+								org=(self.joints[K4ABT_JOINT_HEAD].position.x,
+									 self.joints[K4ABT_JOINT_HEAD].position.y),
 								fontFace=cv2.FONT_HERSHEY_SIMPLEX,
 								fontScale=1,
 								color=(255, 255, 255), # white
-								thickness=1,
+								thickness=2,
 								lineType=cv2.LINE_AA)
 
 		if only_segments:
