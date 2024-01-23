@@ -56,7 +56,7 @@ class Body2d:
 		if show_id:
 			image = cv2.putText(img=image,
 								text=str(self.id),
-								org=(50, 50),
+								org=self.joints[27].get_coordinates(),
 								fontFace=cv2.FONT_HERSHEY_SIMPLEX,
 								fontScale=1,
 								color=(255, 255, 255), # white
